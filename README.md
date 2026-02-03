@@ -1,4 +1,4 @@
-# Quantum-LBFGS
+# Quantum-L-BFGS
 항상 화이팅입니다~!
 
 # 🔥 Hotspots
