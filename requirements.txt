@@ -1,0 +1,7 @@
+pennylane
+qiskit
+pennylane-qiskit
+numpy
+scipy
+
+matplotlib

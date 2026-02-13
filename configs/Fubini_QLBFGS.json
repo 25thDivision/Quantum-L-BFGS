@@ -1,0 +1,22 @@
+{
+    "physics": {
+        "n_qubits": 4,
+        "layers": 2
+    },
+    "simulation": {
+        "shots": 17,
+        "noise_prob": 0.001,
+        "seed": 42
+    },
+    "optimizer": {
+        "max_iter": 50,
+        "tol": 0.001,
+        "history_size": 20,
+        "spsa_delta": 0.01 
+    },
+    "output": {
+        "save_dir": "results",
+        "plot_filename": "convergence_fubini_17shots.png",
+        "param_filename": "best_params_fubini_17shots.npy"
+    }
+}
