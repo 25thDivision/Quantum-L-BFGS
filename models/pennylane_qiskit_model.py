@@ -10,7 +10,7 @@ class PennyLaneQiskitModel(QuantumBase):
         self.J = config["physics"].get("J", 1.0)
         self.h = config["physics"].get("h", 2.0)
         self.shots = config["simulation"]["shots"]
-        self.structure_type = config['physics'].get('structure_type', 'full')
+        self.structure = config["physics"].get("structure", "full")
         
         
         if noise_model is None:
@@ -40,21 +40,21 @@ class PennyLaneQiskitModel(QuantumBase):
 
         # [Option 1] Linear (선형 / Open Boundary)
         # 구조: 0-1, 1-2, 2-3 ... (양 끝 끊어짐) -> 논문 12큐빗(Linear) 실험용
-        if self.structure_type == 'linear':
+        if self.structure == 'linear':
             for i in range(self.n_qubits - 1):
                 coeffs.append(-self.J)
                 obs.append(qml.PauliZ(i) @ qml.PauliZ(i + 1))
 
         # [Option 2] Reverse Linear (역선형)
         # 구조: 3-2, 2-1, 1-0 ... (Linear와 물리적으로 같지만 순서만 반대)
-        elif self.structure_type == 'reverse_linear':
+        elif self.structure == 'reverse_linear':
             for i in range(self.n_qubits - 1, 0, -1):
                 coeffs.append(-self.J)
                 obs.append(qml.PauliZ(i) @ qml.PauliZ(i - 1))
 
         # [Option 3] Circular (원형 / Periodic Boundary)
         # 구조: 0-1, 1-2, ... (N-1)-0 (반지 모양) -> 아까 4큐빗 대박 실험용
-        elif self.structure_type == 'circular':
+        elif self.structure == 'circular':
             for i in range(self.n_qubits):
                 coeffs.append(-self.J)
                 obs.append(qml.PauliZ(i) @ qml.PauliZ((i + 1) % self.n_qubits))
@@ -112,19 +112,19 @@ class PennyLaneQiskitModel(QuantumBase):
             
             # [Option A] Linear (선형)
             # 구조: 0-1, 1-2, 2-3 ... (양 끝 연결 안 됨)
-            if self.structure_type == 'linear':
+            if self.structure == 'linear':
                 for i in range(self.n_qubits - 1):
                     qml.CNOT(wires=[i, i + 1])
 
             # [Option B] Reverse Linear (역선형)
             # 구조: 3-2, 2-1, 1-0 ... (거꾸로 연결)
-            elif self.structure_type == 'reverse_linear':
+            elif self.structure == 'reverse_linear':
                 for i in range(self.n_qubits - 1, 0, -1):
                     qml.CNOT(wires=[i, i - 1])
 
             # [Option C] Circular (원형/Periodic)
             # 구조: 0-1, 1-2, 2-3, 3-0 (반지 모양)
-            elif self.structure_type == 'circular':
+            elif self.structure == 'circular':
                 for i in range(self.n_qubits):
                     qml.CNOT(wires=[i, (i + 1) % self.n_qubits])
 
